@@ -1,0 +1,438 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* --------------------------------------------------------------------
+   Brand fonts — registered via next/font/local in app/layout.tsx
+   Each font exposes a CSS variable, mapped here to a semantic role.
+
+   Slant       → AURASTIC logo wordmark (identity-only)        --font-slant
+   Cerena      → sub-brand / descriptor labels                 --font-cerena
+   Biko        → #anArtisticproduction hashtag only            --font-biko
+   Bebas Neue  → heavy display, poster headlines               --font-bebas
+   BankGothic  → tagline voice                                 --font-bankgothic
+   Rubik       → document body                                 --font-rubik
+   Exo         → numerical / data                              --font-exo
+   Instrument  → italic accents (kept from prior system)       --font-instrument
+   -------------------------------------------------------------------- */
+
+:root {
+  /* Semantic aliases — point at the role-correct brand font */
+  --font-display: var(--font-bebas), 'Bebas Neue', 'Impact', 'Arial Narrow', sans-serif;
+  --font-tagline: var(--font-bankgothic), 'Trade Gothic', 'Helvetica Neue', Helvetica, sans-serif;
+  --font-body:    var(--font-rubik), 'Inter', system-ui, -apple-system, sans-serif;
+  --font-num:     var(--font-exo), 'Inter', system-ui, sans-serif;
+  --font-hash:    var(--font-biko), 'Manrope', system-ui, sans-serif;
+  --font-sub:     var(--font-cerena), 'Cinzel', 'Times New Roman', serif;
+  --font-mark:    var(--font-slant), 'Bebas Neue', 'Impact', sans-serif;
+  --font-serif:   var(--font-instrument), Georgia, serif;
+
+  --bg-void: #050209;
+  --violet-500: #8b5cf6;
+  --magenta: #e879f9;
+  --glow: #b794ff;
+  --border: rgba(199, 180, 253, 0.10);
+  --border-strong: rgba(199, 180, 253, 0.22);
+
+  font-size: clamp(16px, 0.9vw + 12px, 20px);
+}
+
+/* On giant TV screens, bump base size further for 10-foot viewing */
+@media (min-width: 1920px) and (hover: none) {
+  :root {
+    font-size: clamp(18px, 1vw + 10px, 24px);
+  }
+}
+
+/* Ensure html/body occupy full height without horizontal overflow */
+html,
+body {
+  background: var(--bg-void);
+  color: #f8f5ff;
+  overflow-x: clip;
+  min-height: 100vh;
+  min-height: 100svh; /* small viewport on mobile (avoids URL-bar jump) */
+  /* Never allow the page to scroll sideways even when a child overflows */
+  max-width: 100vw;
+  font-family: var(--font-body);
+}
+
+/* Respect iOS/Android safe areas */
+body {
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+}
+
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html.lenis {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+::selection {
+  background: var(--violet-500);
+  color: #fff;
+}
+
+::-webkit-scrollbar {
+  width: 0;
+  display: none;
+}
+
+/* Ambient grain overlay — hidden on low-power / small screens for perf */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.35;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='0.35'/></svg>");
+}
+
+@media (max-width: 480px) {
+  body::after {
+    opacity: 0.2; /* slightly less grain on phones — feels less noisy */
+  }
+}
+
+/* Ambient violet spotlights — slowly drift + breathe to feel alive */
+body::before {
+  content: '';
+  position: fixed;
+  inset: -10%;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(ellipse 60% 80% at 15% 0%, rgba(139, 92, 246, 0.22), transparent 55%),
+    radial-gradient(ellipse 55% 70% at 85% 10%, rgba(232, 121, 249, 0.10), transparent 60%),
+    radial-gradient(ellipse 80% 60% at 50% 120%, rgba(91, 33, 182, 0.16), transparent 60%);
+  animation: ambient-drift 28s ease-in-out infinite alternate;
+  will-change: transform, opacity;
+}
+
+@keyframes ambient-drift {
+  0%   { transform: translate3d(0%, 0%, 0) scale(1);     opacity: 1;    }
+  33%  { transform: translate3d(-3%, 2%, 0) scale(1.06); opacity: 0.92; }
+  66%  { transform: translate3d(2%, -3%, 0) scale(1.03); opacity: 1;    }
+  100% { transform: translate3d(0%, 0%, 0) scale(1);     opacity: 0.96; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body::before { animation: none; }
+}
+
+main,
+header,
+footer,
+section {
+  position: relative;
+  z-index: 2;
+}
+
+/* Text gradients */
+.text-gradient {
+  background: linear-gradient(180deg, #fff, #c4b5fd);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.text-gradient-magenta {
+  background: linear-gradient(180deg, #c4b5fd, #e879f9);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.italic-serif {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+}
+
+/* --------------------------------------------------------------------
+   Responsive container
+   Scales its max-width across breakpoints — never touches viewport edge.
+   -------------------------------------------------------------------- */
+.wrap {
+  width: 100%;
+  margin-inline: auto;
+  padding-inline: clamp(16px, 4vw, 48px);
+}
+
+@media (min-width: 640px)   { .wrap { max-width: 640px;  } }
+@media (min-width: 768px)   { .wrap { max-width: 768px;  } }
+@media (min-width: 1024px)  { .wrap { max-width: 1024px; } }
+@media (min-width: 1280px)  { .wrap { max-width: 1280px; } }
+@media (min-width: 1536px)  { .wrap { max-width: 1440px; } }
+@media (min-width: 1920px)  { .wrap { max-width: 1680px; } }
+@media (min-width: 2560px)  { .wrap { max-width: 2200px; } }
+
+/* --------------------------------------------------------------------
+   Reduced motion — honor OS setting
+   -------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Headings — Bebas Neue heavy poster display */
+h1, h2, h3, h4, h5 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: 0;
+  line-height: 1.05;
+  margin: 0;
+}
+
+p { margin: 0; font-family: var(--font-body); }
+
+/* --------------------------------------------------------------------
+   Editorial type scale — coherent rhythm across all sections.
+
+   t-display-* / t-h4   → Bebas Neue (heavy poster headlines)
+   t-tagline            → BankGothic Lt BT (the Aurastic tagline voice)
+   t-lede / t-body      → Rubik (document body)
+   t-num                → Exo (numerical / data)
+   t-kicker             → BankGothic Lt BT (small editorial markers)
+   t-hash / t-sub /
+   t-mark               → Biko / Cerena / Slant (single-purpose roles)
+   -------------------------------------------------------------------- */
+.t-display-1 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: 0.005em;
+  line-height: 0.92;
+  font-size: clamp(56px, 11vw, 168px);
+  text-transform: uppercase;
+}
+.t-display-2 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: 0.005em;
+  line-height: 0.98;
+  font-size: clamp(40px, 6vw, 96px);
+  text-transform: uppercase;
+}
+.t-display-3 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  line-height: 1.02;
+  font-size: clamp(28px, 3.4vw, 52px);
+  text-transform: uppercase;
+}
+.t-h4 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: 0.015em;
+  line-height: 1.1;
+  font-size: clamp(20px, 1.8vw, 30px);
+  text-transform: uppercase;
+}
+.t-tagline {
+  font-family: var(--font-tagline);
+  font-weight: 300;
+  letter-spacing: 0.06em;
+  line-height: 1.18;
+  text-transform: uppercase;
+  font-size: clamp(18px, 1.6vw, 28px);
+}
+.t-lede {
+  font-family: var(--font-body);
+  font-size: clamp(16px, 1.15vw, 19px);
+  line-height: 1.7;
+  font-weight: 400;
+  color: #a89cc5;
+}
+.t-body {
+  font-family: var(--font-body);
+  font-size: clamp(14px, 1vw, 17px);
+  line-height: 1.75;
+  font-weight: 400;
+  color: #a89cc5;
+}
+.t-meta {
+  font-family: var(--font-body);
+  font-size: clamp(12px, 0.85vw, 14px);
+  line-height: 1.5;
+  font-weight: 400;
+  color: #6b6189;
+}
+.t-kicker {
+  font-family: var(--font-tagline);
+  font-size: clamp(10.5px, 0.78vw, 12px);
+  font-weight: 400;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: #c4b5fd;
+}
+.t-num {
+  font-family: var(--font-num);
+  font-weight: 700;
+  font-feature-settings: 'lnum', 'tnum';
+  letter-spacing: -0.01em;
+  line-height: 1;
+}
+.t-hash {
+  font-family: var(--font-hash);
+  font-weight: 400;
+  letter-spacing: 0.02em;
+}
+.t-sub {
+  font-family: var(--font-sub);
+  font-weight: 400;
+  letter-spacing: 0.06em;
+}
+.t-mark {
+  font-family: var(--font-mark);
+  letter-spacing: 0.02em;
+}
+
+/* Vertical rhythm helpers */
+.section-y {
+  padding-top: clamp(56px, 7vw, 100px);
+  padding-bottom: clamp(56px, 7vw, 100px);
+}
+.section-y-lg {
+  padding-top: clamp(72px, 9vw, 140px);
+  padding-bottom: clamp(72px, 9vw, 140px);
+}
+
+/* Hairline divider used inline (not the heavy SectionDivider component) */
+.hairline {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(199, 180, 253, 0.18), transparent);
+}
+
+/* Editorial card — the canonical surface for content cards */
+.surface-card {
+  border-radius: clamp(18px, 1.6vw, 24px);
+  border: 1px solid rgba(199, 180, 253, 0.10);
+  background: linear-gradient(180deg, rgba(23, 16, 58, 0.42), rgba(10, 5, 20, 0.65));
+  backdrop-filter: blur(8px);
+}
+.surface-card-strong {
+  border-radius: clamp(18px, 1.6vw, 24px);
+  border: 1px solid rgba(199, 180, 253, 0.18);
+  background: linear-gradient(180deg, rgba(31, 21, 80, 0.48), rgba(10, 5, 20, 0.7));
+  backdrop-filter: blur(10px);
+}
+
+/* Prevent orphaned text on narrow widths — break long words gracefully */
+h1, h2, h3, h4, h5, p {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  hyphens: none;
+}
+
+/* Images and videos stay within bounds */
+img, video, svg, canvas {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Reveal animation utility */
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+.reveal.in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Split-text character reveal */
+.char {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(100%);
+  will-change: opacity, transform;
+}
+
+/* Marquee */
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+@keyframes eq {
+  0%, 100% { transform: scaleY(0.35); }
+  50% { transform: scaleY(1.15); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(1.15); }
+}
+
+/* --------------------------------------------------------------------
+   Touch devices — disable hover-dependent effects that feel "stuck"
+   -------------------------------------------------------------------- */
+@media (hover: none) and (pointer: coarse) {
+  .group:hover .group-hover\:scale-110 {
+    transform: none;
+  }
+  .group:hover .group-hover\:opacity-50 {
+    opacity: 1;
+  }
+}
+
+/* --------------------------------------------------------------------
+   TV / 10-foot UI — beefier focus styles, bigger hit targets
+   -------------------------------------------------------------------- */
+@media (min-width: 1920px) and (hover: none) {
+  a:focus-visible,
+  button:focus-visible,
+  input:focus-visible,
+  textarea:focus-visible,
+  select:focus-visible {
+    outline: 3px solid var(--magenta);
+    outline-offset: 4px;
+    border-radius: 8px;
+  }
+}
+
+/* Prevent iOS zoom-on-focus for input fields */
+@media screen and (max-width: 480px) {
+  input,
+  select,
+  textarea {
+    font-size: 16px !important;
+  }
+}
+
+/* --------------------------------------------------------------------
+   3D canvas — touch: allow vertical scroll through, disable WebGL
+   context menu on long-press
+   -------------------------------------------------------------------- */
+canvas {
+  touch-action: pan-y;
+  -webkit-tap-highlight-color: transparent;
+}
