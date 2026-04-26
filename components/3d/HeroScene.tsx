@@ -420,7 +420,7 @@ export default function HeroScene({
           <EffectComposer multisampling={multisampling}>
             <Bloom intensity={bloomIntensity} luminanceThreshold={0.35} luminanceSmoothing={0.9} mipmapBlur radius={0.9} />
             <ChromaticAberration
-              offset={[0.0006, 0.0008]}
+              offset={new THREE.Vector2(0.0006, 0.0008)}
               blendFunction={BlendFunction.NORMAL}
               radialModulation={false}
               modulationOffset={0}
