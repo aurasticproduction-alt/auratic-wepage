@@ -23,7 +23,7 @@ export default function OneWord() {
             className="t-display-1 leading-[0.9] flex flex-col"
           >
             <span>An Artistic</span>
-            <span className="font-cerena text-gradient-magenta normal-case tracking-[0.04em] mt-2 sm:mt-4 text-[0.62em]">Production</span>
+            <span className="font-cerena text-gradient-magenta normal-case tracking-[0.04em] mt-2 sm:mt-4 text-[0.62em]">production</span>
           </motion.h2>
 
           <motion.div
