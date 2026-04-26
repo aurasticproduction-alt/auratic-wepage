@@ -49,7 +49,6 @@ export default function NorthStar() {
     >
       <div className="wrap">
         <SectionHead
-          chapter="VII"
           kicker="The 5-Year North Star"
           title={
             <>

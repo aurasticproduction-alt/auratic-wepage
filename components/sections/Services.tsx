@@ -188,7 +188,6 @@ export default function Services() {
     <section id="services" className="section-y overflow-hidden">
       <div className="wrap">
         <SectionHead
-          chapter="II"
           kicker="What we do · 12 service sectors"
           title={
             <>

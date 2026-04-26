@@ -8,7 +8,6 @@ export default function Audience() {
     <section className="section-y">
       <div className="wrap">
         <SectionHead
-          chapter="VI"
           kicker="Events we deliver"
           title={
             <>

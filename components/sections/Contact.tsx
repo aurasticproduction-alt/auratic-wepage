@@ -67,7 +67,6 @@ export default function Contact() {
     <section id="contact" className="section-y">
       <div className="wrap">
         <SectionHead
-          chapter="IX"
           kicker="Get in touch"
           title={
             <>

@@ -11,7 +11,6 @@ export default function UnifiedVision() {
     >
       <div className="wrap">
         <SectionHead
-          chapter="V"
           kicker="The Unified Vision"
           title={
             <>

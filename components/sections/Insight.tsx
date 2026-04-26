@@ -11,7 +11,6 @@ export default function Insight() {
     >
       <div className="wrap">
         <SectionHead
-          chapter="II"
           kicker="The industry insight"
           title={
             <>
